@@ -47,7 +47,22 @@ app/console doctrine:schema:update --force
 
 result: 
 
-Array
+    vsavritsky_morpher.access.username: username
+    vsavritsky_morpher.access.pass: pass
+    
+
+    public function registerBundles()
+    {
+    
+        $bundles = array(
+            ...
+            new Anchovy\CURLBundle\AnchovyCURLBundle(),
+            new Vsavritsky\MorpherBundle\VsavritskyMorpherBundle(),
+            ...
+        );
+	
+	`
+	Array
 	(
 	    [Р] => Вовы
 	    [Д] => Вове
@@ -65,3 +80,4 @@ Array
 	        )
 	
 	)
+	`
