@@ -12,10 +12,6 @@ composer require vsavritsky/morpherbundle
            ...
         }
     }
-    
-or 
-
-composer require vsavritsky/morpherbundle
 
 Add the AnchovyCURLBundle and VsavritskyMorpherBundle to your application's kernel:
 
@@ -28,13 +24,13 @@ Add the AnchovyCURLBundle and VsavritskyMorpherBundle to your application's kern
             ...
         );
 
-update db:
-app/console doctrine:schema:update --force
-
 add parameters access to parameters.yml:
 
     vsavritsky_morpher.access.username: username
     vsavritsky_morpher.access.pass: pass
+
+update db:
+app/console doctrine:schema:update --force
 
 ## Usage ##
 
