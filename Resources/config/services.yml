@@ -1,0 +1,8 @@
+services:
+   vsavritsky_morpher.request:
+        class: Vsavritsky\MorpherBundle\Entity\RequestFacade
+        arguments: [@doctrine.orm.entity_manager, @vsavritsky_morpher.request_exec]
+
+   vsavritsky_morpher.request_exec:
+        class: Vsavritsky\MorpherBundle\Entity\RequestExec
+        arguments: [@anchovy.curl, "%vsavritsky_morpher.access.username%", "%vsavritsky_morpher.access.pass%"]

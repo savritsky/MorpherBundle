@@ -1,0 +1,16 @@
+Vsavritsky\MorpherBundle\Entity\Request:
+    type: entity
+    table: vsavritsky_morpher_request
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        type:
+            type: string
+        word:
+            type: string
+        result:
+            type: json_array

@@ -1,0 +1,3 @@
+vsavritsky_morpher_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: VsavritskyMorpherBundle:Default:index }
