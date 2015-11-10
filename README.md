@@ -46,7 +46,8 @@ app/console doctrine:schema:update --force
 	    }
 
 result: 
-	`Array (
+	`
+	Array (
 	    [Р] => Стола
 	    [Д] => Столу
 	    [В] => Стол
