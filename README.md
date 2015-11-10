@@ -34,9 +34,9 @@ Add the AnchovyCURLBundle and VsavritskyMorpherBundle to your application's kern
 
 	    public function indexAction() {
 
-      $morpher = $this->get('vsavritsky_morpher.request');
-      $result = $morpher->inflect('Тест');
-      echo '<pre>';
-      print_r($result); exit();
-      exit();
-		}
+      		$morpher = $this->get('vsavritsky_morpher.request');
+      		$result = $morpher->inflect('Тест');
+		echo '<pre>';
+	      	print_r($result); exit();
+	      	exit();
+	    }
