@@ -1,6 +1,6 @@
 {
   "name" : "vsavritsky/morpherbundle",
-  "description" : "service morpher",
+  "description" : "Morpher Webservice",
   "version" : "1.0.1",
   "type" : "symfony-bundle",
   "homepage": "",
