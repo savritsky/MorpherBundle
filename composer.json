@@ -5,7 +5,7 @@
   "type" : "symfony-bundle",
   "homepage": "",
   "license" : "MIT",
-  "keywords" : ["page", "page bundle"],
+  "keywords" : ["Morpher", "Morpher bundle"],
   "authors" : [{
     "name" : "Vladimir Savritsky",
     "email" : "vladimir.savritsky@gmail.com"
