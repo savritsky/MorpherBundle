@@ -1,6 +1,13 @@
 Vsavritsky\MorpherBundle\Entity\Request:
     type: entity
     table: vsavritsky_morpher_request
+    indexes:
+        type_word_index:
+            columns: [type, word]
+        type_index:
+            columns: [type]
+        word_index:
+             columns: [word]
     id:
         id:
             type: integer
