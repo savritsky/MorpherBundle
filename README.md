@@ -28,6 +28,9 @@ Add the AnchovyCURLBundle and VsavritskyMorpherBundle to your application's kern
             ...
         );
 
+update db:
+app/console doctrine:schema:update --force
+
 ## Usage ##
 
 	// Simple call:
