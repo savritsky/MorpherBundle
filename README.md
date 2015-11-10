@@ -46,38 +46,27 @@ app/console doctrine:schema:update --force
 	    }
 
 result: 
-
-    vsavritsky_morpher.access.username: username
-    vsavritsky_morpher.access.pass: pass
-    
-
-    public function registerBundles()
-    {
-    
-        $bundles = array(
-            ...
-            new Anchovy\CURLBundle\AnchovyCURLBundle(),
-            new Vsavritsky\MorpherBundle\VsavritskyMorpherBundle(),
-            ...
-        );
-	
 	`
-	Array
-	(
-	    [Р] => Вовы
-	    [Д] => Вове
-	    [В] => Вову
-	    [Т] => Вовой
-	    [П] => Вове
-	    [множественное] => Array
-	        (
-	            [И] => Вовы
-	            [Р] => Вов
-	            [Д] => Вовам
-	            [В] => Вов
-	            [Т] => Вовами
-	            [П] => Вовах
+	Array (
+	    [Р] => Стола
+	    [Д] => Столу
+	    [В] => Стол
+	    [Т] => Столом
+	    [П] => Столе
+	    [П-о] => о Столе
+	    [род] => Мужской
+	    [множественное] => Array (
+	            [И] => Столы
+	            [Р] => Столов
+	            [Д] => Столам
+	            [В] => Столы
+	            [Т] => Столами
+	            [П] => Столах
+	            [П-о] => о Столах
 	        )
 	
+	    [где] => в Столе
+	    [куда] => в Стол
+	    [откуда] => из Стола
 	)
-	`
+	``
