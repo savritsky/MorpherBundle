@@ -33,9 +33,8 @@ app/console doctrine:schema:update --force
 
 add parameters access to parameters.yml:
 
-vsavritsky_morpher.access.username: username
-
-vsavritsky_morpher.access.pass: pass
+    vsavritsky_morpher.access.username: username
+    vsavritsky_morpher.access.pass: pass
 
 ## Usage ##
 
