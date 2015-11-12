@@ -66,7 +66,7 @@ class RequestFacade
         $url = '';
         switch ($type) {
             case self::REQUEST_INFLECT_TYPE:
-                $url = self::BASE_URL.self::INFLECT.$word;
+                $url = self::BASE_URL.self::INFLECT.urlencode($word);
                 break;
         }
 
