@@ -4,6 +4,17 @@ namespace Vsavritsky\MorpherBundle\Entity;
 
 use Doctrine\ORM\EntityManager;
 
+use Vsavritsky\MorpherBundle\Exception\ExceededLimitRequests;
+use Vsavritsky\MorpherBundle\Exception\IpBlocked;
+use Vsavritsky\MorpherBundle\Exception\MethodError;
+use Vsavritsky\MorpherBundle\Exception\ExpectedRussianWord;
+use Vsavritsky\MorpherBundle\Exception\ExpectedParameter;
+use Vsavritsky\MorpherBundle\Exception\ServiceNotPaid;
+use Vsavritsky\MorpherBundle\Exception\UserNotFound;
+use Vsavritsky\MorpherBundle\Exception\AuthorisationError;
+use Vsavritsky\MorpherBundle\Exception\UnknownCaseWord;
+use Vsavritsky\MorpherBundle\Exception\UrlTypeIncorrect;
+
 class RequestFacade
 {
     private $em;
@@ -12,7 +23,19 @@ class RequestFacade
 
     const BASE_URL = 'http://api.morpher.ru/WebService.asmx';
     const INFLECT = '/GetXml?s=';
+    const LIMIT = '/GetDailyQueryLimit';
+
     const REQUEST_INFLECT_TYPE = 'inflect';
+    const REQUEST_LIMIT_TYPE = 'limit';
+
+    const CASE_ROD = 'Р';
+    const CASE_DAT = 'Д';
+    const CASE_VIN = 'В';
+    const CASE_TVOR = 'Т';
+    const CASE_PREDL = 'П';
+    const CASE_GDE = 'М';
+
+    private $cases = array(self::CASE_ROD, self::CASE_DAT, self::CASE_VIN, self::CASE_TVOR, self::CASE_PREDL, self::CASE_GDE);
 
     public function __construct(EntityManager $entityManager, RequestExec $requestExec)
     {
@@ -21,12 +44,27 @@ class RequestFacade
         $this->requestExec = $requestExec;
     }
 
-    public function inflect($word)
+    public function inflect($word, $returnType, $default = '')
     {
-        return $this->getResult(self::REQUEST_INFLECT_TYPE, $word);
+        if (!in_array($returnType, $this->cases)) {
+            throw new UnknownCaseWord();
+        }
+
+        $result = $this->getResultWithCache(self::REQUEST_INFLECT_TYPE, $word, $returnType);
+
+        if (!isset($result[$returnType])) {
+            return $default;
+        }
+
+        return $result[$returnType];
     }
 
-    private function getResult($type, $word)
+    public function getLimit()
+    {
+        return $this->getResultLimit(self::REQUEST_LIMIT_TYPE);
+    }
+
+    private function getResultWithCache($type, $word)
     {
         $result = $this->getCache($type, $word);
         if (!empty($result)) {
@@ -43,30 +81,32 @@ class RequestFacade
         return $result;
     }
 
-    private function errorRequest($result)
+    private function getResultLimit($type)
     {
-        if (isset($result['code'])) {
-            return true;
-        }
+        $url = $this->getUrlByType($type);
+        $result = $this->requestExec->exec($url);
 
-        return false;
+        return $result;
     }
 
     private function getPublicType()
     {
-        return [self::REQUEST_INFLECT_TYPE];
+        return [self::REQUEST_INFLECT_TYPE, self::REQUEST_LIMIT_TYPE];
     }
 
-    private function getUrlByType($type, $word)
+    private function getUrlByType($type, $word = '')
     {
-        if (empty($type) || empty($word) || !in_array($type, $this->getPublicType())) {
-            throw new Exception('error params getUrlByType');
+        if (empty($type) || !in_array($type, $this->getPublicType())) {
+            throw new UrlTypeIncorrect('error params getUrlByType');
         }
 
         $url = '';
         switch ($type) {
             case self::REQUEST_INFLECT_TYPE:
                 $url = self::BASE_URL.self::INFLECT.urlencode($word);
+                break;
+            case self::REQUEST_LIMIT_TYPE:
+                $url = self::BASE_URL.self::LIMIT;
                 break;
         }
 
@@ -76,7 +116,7 @@ class RequestFacade
     private function getCache($type, $word)
     {
         if (empty($type) || empty($word)) {
-            throw new Exception('error params getCache');
+            throw new ExpectedParameter('error params getCache');
         }
 
         $request = $this->repository->findOneBy(['type' => $type, 'word' => $word]);
@@ -89,7 +129,7 @@ class RequestFacade
     private function saveCache($type, $word, array $result)
     {
         if (empty($type) || empty($word) || empty($result)) {
-            throw new Exception('error params saveCache');
+            throw new ExpectedParameter('error params saveCache');
         }
 
         $request = new Request();
@@ -102,8 +142,57 @@ class RequestFacade
         return $request->getResult();
     }
 
-    private function getData($result)
+    private function errorRequest($result)
     {
-        return $result;
+        /*
+        1	Превышен лимит на количество запросов в сутки. Перейдите на следующий тарифный план.
+        2	Превышен лимит на количество одинаковых запросов в сутки. Реализуйте кеширование.
+        3	IP заблокирован.
+        4	Склонение числительных в GetXml не поддерживается. Используйте метод Propis.
+        5	Не найдено русских слов.
+        6	Не указан обязательный параметр s.
+        7	Необходимо оплатить услугу.
+        8	Пользователь с таким ID не зарегистрирован.
+        9	Неправильное имя пользователя или пароль.
+        */
+        if (empty($result)) {
+            return true;
+        }
+
+        if (isset($result['code']) && isset($result['error'])) {
+            return true;
+            /*switch ($result['code']) {
+                case 1:
+                    throw new ExceededLimitRequests();
+                    break;
+                case 2:
+                    throw new ExceededLimitRequests();
+                    break;
+                case 3:
+                    throw new IpBlocked();
+                    break;
+                case 4:
+                    throw new MethodError();
+                    break;
+                case 5:
+                    throw new ExpectedRussianWord();
+                    break;
+                case 6:
+                    throw new ExpectedParameter();
+                    break;
+                case 7:
+                    throw new ServiceNotPaid();
+                    break;
+                case 8:
+                    throw new UserNotFound();
+                    break;
+                case 9:
+                    throw new AuthorisationError();
+                    break;
+            }
+            return true;*/
+        }
+
+        return false;
     }
 }
