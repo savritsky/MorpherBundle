@@ -35,40 +35,24 @@ app/console doctrine:schema:update --force
 ## Usage ##
 
 	// Simple call:
-
+	    use Vsavritsky\MorpherBundle\Entity\RequestFacade;
+	    ...
 	    public function indexAction() {
 
       		$morpher = $this->get('vsavritsky_morpher.request');
-      		$result = $morpher->inflect('Тест');
+      		$result = $morpher->inflect('Тест', RequestFacade::CASE_ROD, 'Дефолтное значение');
 		echo '<pre>';
 	      	print_r($result); exit();
 	      	exit();
 	    }
 
-result: 
+consts
+    const CASE_ROD = 'Р';
+    const CASE_DAT = 'Д';
+    const CASE_VIN = 'В';
+    const CASE_TVOR = 'Т';
+    const CASE_PREDL = 'П';
+    const CASE_GDE = 'М';
 
-`
-Array
-(
-    [Р] => Стола
-    [Д] => Столу
-    [В] => Стол
-    [Т] => Столом
-    [П] => Столе
-    [П-о] => о Столе
-    [род] => Мужской
-    [множественное] => Array
-        (
-            [И] => Столы
-            [Р] => Столов
-            [Д] => Столам
-            [В] => Столы
-            [Т] => Столами
-            [П] => Столах
-            [П-о] => о Столах
-        )
-    [где] => в Столе
-    [куда] => в Стол
-    [откуда] => из Стола
-)
+result: 'Тесту'
 `
