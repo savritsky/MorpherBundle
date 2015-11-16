@@ -48,11 +48,17 @@ app/console doctrine:schema:update --force
 
 consts
     `const CASE_ROD = 'Р';`
+    
     `const CASE_DAT = 'Д';`
+    
     `const CASE_VIN = 'В';`
+    
     `const CASE_TVOR = 'Т';`
+    
     `const CASE_PREDL = 'П';`
+    
     `const CASE_GDE = 'М';`
+    
 
 `result: 'Тесту'`
 `
