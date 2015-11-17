@@ -34,6 +34,7 @@ class RequestFacade
     const CASE_TVOR = 'Т';
     const CASE_PREDL = 'П';
     const CASE_GDE = 'М';
+    const PLURAL = 'множественное';
 
     private $cases = array(self::CASE_ROD, self::CASE_DAT, self::CASE_VIN, self::CASE_TVOR, self::CASE_PREDL, self::CASE_GDE);
 
@@ -44,7 +45,7 @@ class RequestFacade
         $this->requestExec = $requestExec;
     }
 
-    public function inflect($word, $returnType, $default = '')
+    public function inflect($word, $returnType, $default = '', $plural = false)
     {
         if (!in_array($returnType, $this->cases)) {
             throw new UnknownCaseWord();
@@ -52,11 +53,16 @@ class RequestFacade
 
         $result = $this->getResultWithCache(self::REQUEST_INFLECT_TYPE, $word, $returnType);
 
-        if (!isset($result[$returnType])) {
+        $data = $result;
+        if ($plural) {
+            $data = $result[self::PLURAL];
+        }
+
+        if (!isset($data[$returnType])) {
             return $default;
         }
 
-        return $result[$returnType];
+        return $data[$returnType];
     }
 
     public function getLimit()
