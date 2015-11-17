@@ -40,7 +40,8 @@ app/console doctrine:schema:update --force
 	    public function indexAction() {
 
       		$morpher = $this->get('vsavritsky_morpher.request');
-      		$result = $morpher->inflect('Тест', RequestFacade::CASE_ROD, 'Дефолтное значение');
+      		$plural = true;
+      		$result = $morpher->inflect('Тест', RequestFacade::CASE_ROD, 'Дефолтное значение', $plural);
 		echo '<pre>';
 	      	print_r($result); exit();
 	      	exit();
