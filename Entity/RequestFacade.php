@@ -3,15 +3,7 @@
 namespace Vsavritsky\MorpherBundle\Entity;
 
 use Doctrine\ORM\EntityManager;
-
-use Vsavritsky\MorpherBundle\Exception\ExceededLimitRequests;
-use Vsavritsky\MorpherBundle\Exception\IpBlocked;
-use Vsavritsky\MorpherBundle\Exception\MethodError;
-use Vsavritsky\MorpherBundle\Exception\ExpectedRussianWord;
 use Vsavritsky\MorpherBundle\Exception\ExpectedParameter;
-use Vsavritsky\MorpherBundle\Exception\ServiceNotPaid;
-use Vsavritsky\MorpherBundle\Exception\UserNotFound;
-use Vsavritsky\MorpherBundle\Exception\AuthorisationError;
 use Vsavritsky\MorpherBundle\Exception\UnknownCaseWord;
 use Vsavritsky\MorpherBundle\Exception\UrlTypeIncorrect;
 
@@ -28,6 +20,7 @@ class RequestFacade
     const REQUEST_INFLECT_TYPE = 'inflect';
     const REQUEST_LIMIT_TYPE = 'limit';
 
+    const CASE_IM = 'И'; // actual for pluralization requests.
     const CASE_ROD = 'Р';
     const CASE_DAT = 'Д';
     const CASE_VIN = 'В';
@@ -36,8 +29,12 @@ class RequestFacade
     const CASE_GDE = 'где';
     const PLURAL = 'множественное';
 
-    private $cases = array(self::CASE_ROD, self::CASE_DAT, self::CASE_VIN, self::CASE_TVOR, self::CASE_PREDL, self::CASE_GDE);
-
+    /**
+     * RequestFacade constructor.
+     *
+     * @param EntityManager $entityManager
+     * @param RequestExec $requestExec
+     */
     public function __construct(EntityManager $entityManager, RequestExec $requestExec)
     {
         $this->em = $entityManager;
@@ -45,24 +42,39 @@ class RequestFacade
         $this->requestExec = $requestExec;
     }
 
-    public function inflect($word, $returnType, $default = '', $plural = false)
+    /**
+     * @param string $word
+     * @param string $case One of the RequestFacade::CASE_* constants.
+     * @param string|null $default
+     * @param bool|false $plural
+     * @return string
+     */
+    public function inflect($word, $case, $default = null, $plural = false)
     {
-        if (!in_array($returnType, $this->cases)) {
+        if (! in_array($case, array(
+            self::CASE_IM,
+            self::CASE_ROD,
+            self::CASE_DAT,
+            self::CASE_VIN,
+            self::CASE_TVOR,
+            self::CASE_PREDL,
+            self::CASE_GDE))
+        ) {
             throw new UnknownCaseWord();
         }
 
-        $result = $this->getResultWithCache(self::REQUEST_INFLECT_TYPE, $word, $returnType);
+        $result = $this->getResultWithCache(self::REQUEST_INFLECT_TYPE, $word);
 
-        $data = $result;
-        if ($plural) {
-            $data = $result[self::PLURAL];
+        if (is_array($result)) {
+            if ($plural && isset($result[self::PLURAL]) && isset($result[self::PLURAL][$case])) {
+                return $result[self::PLURAL][$case];
+
+            } elseif (isset($result[$case])) {
+                return $result[$case];
+            }
         }
 
-        if (!isset($data[$returnType])) {
-            return $default;
-        }
-
-        return $data[$returnType];
+        return $default;
     }
 
     public function getLimit()
