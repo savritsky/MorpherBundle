@@ -33,7 +33,7 @@ class RequestFacade
     const CASE_VIN = 'В';
     const CASE_TVOR = 'Т';
     const CASE_PREDL = 'П';
-    const CASE_GDE = 'М';
+    const CASE_GDE = 'где';
     const PLURAL = 'множественное';
 
     private $cases = array(self::CASE_ROD, self::CASE_DAT, self::CASE_VIN, self::CASE_TVOR, self::CASE_PREDL, self::CASE_GDE);
