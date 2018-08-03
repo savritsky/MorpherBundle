@@ -11,9 +11,9 @@
     "email" : "vladimir.savritsky@gmail.com"
   }],
   "require" : {
-    "php": ">=5.4",
-    "symfony/symfony": ">=2.6",
-    "anchovy/curl-bundle": ">=2.0"
+    "php": ">=7.1",
+    "symfony/symfony": ">=2.8",
+    "anchovy/curl-bundle": "dev-master"
   },
   "autoload" : {
     "psr-4" : { "Vsavritsky\\MorpherBundle\\" : "" }
