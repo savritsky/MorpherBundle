@@ -19,7 +19,6 @@ Add the AnchovyCURLBundle and VsavritskyMorpherBundle to your application's kern
     {
         $bundles = array(
             ...
-            new Anchovy\CURLBundle\AnchovyCURLBundle(),
             new Vsavritsky\MorpherBundle\VsavritskyMorpherBundle(),
             ...
         );
