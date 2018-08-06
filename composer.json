@@ -3,7 +3,6 @@
   "description" : "Morpher Webservice",
   "version" : "1.0.1",
   "type" : "symfony-bundle",
-  "homepage": "",
   "license" : "MIT",
   "keywords" : ["Morpher", "Morpher bundle"],
   "authors" : [{
@@ -12,8 +11,8 @@
   }],
   "require" : {
     "php": ">=7.1",
-    "symfony/symfony": ">=2.8",
-    "anchovy/curl-bundle": "dev-master"
+    "symfony/symfony": "=3.4",
+    "guzzlehttp/guzzle": "^6.3"
   },
   "autoload" : {
     "psr-4" : { "Vsavritsky\\MorpherBundle\\" : "" }

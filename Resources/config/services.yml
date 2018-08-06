@@ -5,4 +5,4 @@ services:
 
    vsavritsky_morpher.request_exec:
         class: Vsavritsky\MorpherBundle\Entity\RequestExec
-        arguments: [@anchovy.curl, "%vsavritsky_morpher.access.username%", "%vsavritsky_morpher.access.pass%"]
+        arguments: ["%vsavritsky_morpher.access.username%", "%vsavritsky_morpher.access.pass%"]

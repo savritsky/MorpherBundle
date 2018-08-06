@@ -2,17 +2,18 @@
 
 namespace Vsavritsky\MorpherBundle\Entity;
 
-use Anchovy\CURLBundle\Exception\CurlException;
+use \GuzzleHttp\Client;
+use \Exception;
 
 class RequestExec
 {
-    private $curl;
+    private $client;
     private $username;
     private $pass;
 
-    public function __construct($curl, $username = null, $pass = null)
+    public function __construct($username = null, $pass = null)
     {
-        $this->curl = $curl;
+		$this->client = new \GuzzleHttp\Client();
         $this->username = $username;
         $this->pass = $pass;
     }
@@ -21,19 +22,17 @@ class RequestExec
     {
         $options = array();
         if (!empty($this->username) && $this->pass) {
-            $options = array(
-                'CURLOPT_USERPWD' => $this->username.':'.$this->pass,
-                'CURLOPT_HTTPAUTH' => CURLAUTH_BASIC,
-            );
+            $options = ['auth' => [$this->username, $this->pass]];
         }
 
         try {
-            $return = $this->curl->setURL($url)->setOptions($options)->execute();
-        } catch (CurlException $e) {
+			$return = $this->client->request('GET', $url, $options);
+			return $this->parse($return->getBody());
+        } catch (Exception $e) {
             return [];
         }
 
-        return $this->parse($return);
+        return false;
     }
 
     private function parse($xmlstring)
