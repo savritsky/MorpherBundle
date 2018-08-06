@@ -1,7 +1,7 @@
 services:
    vsavritsky_morpher.request:
         class: Vsavritsky\MorpherBundle\Entity\RequestFacade
-        arguments: [@doctrine.orm.entity_manager, @vsavritsky_morpher.request_exec]
+        arguments: ['@doctrine.orm.entity_manager', '@vsavritsky_morpher.request_exec']
 
    vsavritsky_morpher.request_exec:
         class: Vsavritsky\MorpherBundle\Entity\RequestExec
