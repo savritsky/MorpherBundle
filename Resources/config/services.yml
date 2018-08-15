@@ -2,7 +2,9 @@ services:
    vsavritsky_morpher.request:
         class: Vsavritsky\MorpherBundle\Entity\RequestFacade
         arguments: ['@doctrine.orm.entity_manager', '@vsavritsky_morpher.request_exec']
+        public: true
 
    vsavritsky_morpher.request_exec:
         class: Vsavritsky\MorpherBundle\Entity\RequestExec
         arguments: ["%vsavritsky_morpher.access.username%", "%vsavritsky_morpher.access.pass%"]
+        public: true
